@@ -1,16 +1,15 @@
 angular.module("static-include", []).directive('staticInclude', function($templateRequest, $compile) {
   return {
-    restrict: 'A',
-    transclude: true,
+    restrict: 'E',
+    transclude: 'element',
     replace: true,
-    scope: false,
-    link: function($scope, element, attrs, ctrl, transclude) {
-      var templatePath = attrs.staticInclude;
+    link: function(scope, element, attrs) {
+      var templatePath = attrs.src || attrs.staticInclude;
 
       $templateRequest(templatePath)
         .then(function(response) {
           var contents = element.html(response).contents();
-          $compile(contents)($scope.$new(false, $scope.$parent));
+          $compile(contents)(scope.$new(false, scope.$parent));
         });
     }
   };
